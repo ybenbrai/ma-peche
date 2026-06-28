@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { X } from "lucide-react"
 import type { FishingZone } from "@/lib/zones"
 import { StatusBadge } from "@/components/status-badge"
@@ -24,8 +24,6 @@ export function ZoneSheet({
   onClose: () => void
 }) {
   const forbidden = zone?.status === "forbidden"
-  const sheetRef = useRef<HTMLDivElement>(null)
-  const dragRef = useRef({ startY: 0, currentY: 0, dragging: false })
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -34,34 +32,6 @@ export function ZoneSheet({
     document.addEventListener("keydown", onKey)
     return () => document.removeEventListener("keydown", onKey)
   }, [onClose])
-
-  function handlePointerDown(e: React.PointerEvent) {
-    const el = sheetRef.current
-    if (!el) return
-    el.setPointerCapture(e.pointerId)
-    dragRef.current.startY = e.clientY
-    dragRef.current.dragging = true
-    el.style.transition = "none"
-  }
-
-  function handlePointerMove(e: React.PointerEvent) {
-    if (!dragRef.current.dragging) return
-    const dy = e.clientY - dragRef.current.startY
-    if (dy < 0) return
-    const el = sheetRef.current
-    if (el) el.style.transform = `translateY(${dy}px)`
-    dragRef.current.currentY = dy
-  }
-
-  function handlePointerUp(e: React.PointerEvent) {
-    const el = sheetRef.current
-    if (!el) return
-    dragRef.current.dragging = false
-    el.style.transition = "transform 0.3s ease-out"
-    el.style.transform = ""
-    if (dragRef.current.currentY > 100) onClose()
-    dragRef.current.currentY = 0
-  }
 
   if (!zone) return null
 
@@ -78,7 +48,6 @@ export function ZoneSheet({
       />
 
       <section
-        ref={sheetRef}
         role="dialog"
         aria-modal="true"
         aria-label={`Détails — ${zone.name}`}
@@ -87,13 +56,7 @@ export function ZoneSheet({
         }`}
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <div
-          className="flex justify-center pt-3 touch-none"
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-        >
+        <div className="flex justify-center pt-3">
           <span className="h-1.5 w-10 rounded-full bg-muted-foreground/40" />
         </div>
 
