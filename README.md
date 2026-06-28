@@ -1,84 +1,95 @@
-# Ma Pêche 🎣
+<div align="center">
+  <img src="/ma_peche.png" width="96" height="96" alt="Ma Pêche logo" />
+  <h1 align="center">Ma Pêche 🎣</h1>
+  <p align="center">
+    <strong>Carte interactive des zones de pêche en Wallonie</strong>
+    <br />
+    Interactive fishing zone map for Wallonia, Belgium
+  </p>
+  <p align="center">
+    <a href="https://ma-peche.vercel.app">Live Demo</a>
+    ·
+    <a href="https://github.com/ybenbrai/ma-peche/issues">Report Bug</a>
+  </p>
+</div>
 
-Interactive map of fishing zones in **Wallonia, Belgium** — powered by official open data from the [Wallonia Public Service (SPW)](https://geoservices.wallonie.be).
+<br />
 
-Browse fishing zones, check your GPS location against regulations, view species per season, and access official PDF rulebooks — all in one place.
+## ✨ Features
 
-## Features
-
-- **Interactive map** — Leaflet-powered map with WMS overlay of all fishing zones
-- **Zone details** — Click any zone to see its status (allowed / no-kill / forbidden), zone type (_Calmes, Mixtes, Vives_), day & night fishing rules, and more
-- **Seasonal species** — See which fish are in season for each zone across 4 periods
-- **GPS legal check** — Drop a pin or use your location to instantly check if fishing is allowed
-- **Search** — Nominatim geocoder biased to the Meuse corridor
-- **Private zone overlay** — Restricted/private zones highlighted on the map
-- **Dark theme** — Forced dark mode with inverted OSM tiles
-
-## Tech Stack
-
-| Technology | Purpose |
+| | |
 |---|---|
-| **Next.js 16** (App Router) | Framework |
-| **React 19** | UI library |
-| **Leaflet 1.9** | Interactive map |
-| **Tailwind CSS v4** | Styling |
-| **TypeScript** | Language |
-| **shadcn/ui** | Component primitives |
-| **Lucide** | Icons |
-| **pnpm** | Package manager |
+| 🗺️ **Interactive map** | Leaflet-powered map with official WMS overlay of all fishing zones |
+| 🎯 **Zone details** | Click any zone to see status (allowed / no-kill / forbidden), type, rules & more |
+| 🐟 **Seasonal species** | See which fish are in season per zone across 4 annual periods |
+| 📍 **GPS legal check** | Use your location to instantly check if fishing is allowed where you stand |
+| 🔍 **Search** | Nominatim geocoder biased to the Meuse corridor |
+| 🚫 **Private zone overlay** | Restricted / private zones highlighted on the map |
+| 🌓 **Dark / Light theme** | System-aware, toggleable, remembers your preference |
+| 📄 **Official PDFs** | Species identification, bait rules, pike closure schedules |
 
-### Data Sources
+## 🛠️ Tech Stack
+
+| | |
+|---|---|
+| **Framework** | [Next.js 16](https://nextjs.org/) (App Router) |
+| **UI** | [React 19](https://react.dev/), TypeScript |
+| **Map** | [Leaflet 1.9](https://leafletjs.com/) |
+| **Styling** | [Tailwind CSS v4](https://tailwindcss.com/), shadcn/ui |
+| **Icons** | [Lucide](https://lucide.dev/) |
+| **Package manager** | [pnpm](https://pnpm.io/) |
+
+### 📡 Data Sources
 
 - [ArcGIS REST API — Législation Pêche](https://geoservices.wallonie.be/arcgis/rest/services/EAU/LEGIS_PECHE/MapServer) — Wallonia official fishing zone GIS data
 - [WMS Tile Service](https://geoservices.wallonie.be/arcgis/services/EAU/LEGIS_PECHE/MapServer/WMSServer) — Rendered fishing zone tiles
 - [Nominatim](https://nominatim.openstreetmap.org) — Search geocoding (OpenStreetMap)
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
 - Node.js 20+
-- pnpm 9+
+- [pnpm](https://pnpm.io/) 9+
 
 ```bash
-# Install pnpm if you don't have it
 npm install -g pnpm
 ```
 
-### Install
+### Install & Run
 
 ```bash
 pnpm install
+pnpm dev        # http://localhost:3000
 ```
 
-### Run development server
-
-```bash
-pnpm dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
-### Build for production
+### Production Build
 
 ```bash
 pnpm build
 pnpm start
 ```
 
-## Deploy on Vercel
-
-This project is ready for Vercel deployment.
+## 🌐 Deploy on Vercel
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ybenbrai/ma-peche)
 
-Or deploy manually:
+No environment variables needed — just import and deploy.
 
-1. Push to GitHub
-2. Import the repository in [Vercel](https://vercel.com)
-3. Vercel auto-detects Next.js — no configuration needed
-4. Deploy!
+## 📁 Project Structure
 
-### Environment Variables
+```
+├── app/              # Next.js App Router (layout, page, globals.css)
+├── components/       # React components (map, sheet, search, legend, overlays)
+├── lib/              # Types, parsers, season logic, utilities
+├── public/           # Static assets (icons, logo)
+└── .opencode/        # Architecture documentation
+```
 
-No environment variables are required.
+---
+
+<div align="center">
+  <sub>Données indicatives — vérifiez auprès de votre fédération de pêche</sub>
+  <br />
+  <sub>Data sourced from © Wallonie SPW · Map tiles © OpenStreetMap contributors</sub>
+</div>
