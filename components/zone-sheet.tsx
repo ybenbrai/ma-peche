@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { X } from "lucide-react"
 import type { FishingZone } from "@/lib/zones"
 import { StatusBadge } from "@/components/status-badge"
@@ -24,6 +24,8 @@ export function ZoneSheet({
   onClose: () => void
 }) {
   const forbidden = zone?.status === "forbidden"
+  const sheetRef = useRef<HTMLDivElement>(null)
+  const dragRef = useRef({ startY: 0, currentY: 0, dragging: false })
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -33,6 +35,34 @@ export function ZoneSheet({
     return () => document.removeEventListener("keydown", onKey)
   }, [onClose])
 
+  function handlePointerDown(e: React.PointerEvent) {
+    const el = sheetRef.current
+    if (!el) return
+    el.setPointerCapture(e.pointerId)
+    dragRef.current.startY = e.clientY
+    dragRef.current.dragging = true
+    el.style.transition = "none"
+  }
+
+  function handlePointerMove(e: React.PointerEvent) {
+    if (!dragRef.current.dragging) return
+    const dy = e.clientY - dragRef.current.startY
+    if (dy < 0) return
+    const el = sheetRef.current
+    if (el) el.style.transform = `translateY(${dy}px)`
+    dragRef.current.currentY = dy
+  }
+
+  function handlePointerUp(e: React.PointerEvent) {
+    const el = sheetRef.current
+    if (!el) return
+    dragRef.current.dragging = false
+    el.style.transition = "transform 0.3s ease-out"
+    el.style.transform = ""
+    if (dragRef.current.currentY > 100) onClose()
+    dragRef.current.currentY = 0
+  }
+
   if (!zone) return null
 
   return (
@@ -40,7 +70,7 @@ export function ZoneSheet({
       <div
         onClick={onClose}
         aria-hidden
-        className={`absolute inset-0 z-[1000] bg-black/40 transition-opacity duration-300 ${
+        className={`absolute inset-0 z-[1199] bg-black/40 transition-opacity duration-300 ${
           open
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
@@ -48,15 +78,22 @@ export function ZoneSheet({
       />
 
       <section
+        ref={sheetRef}
         role="dialog"
         aria-modal="true"
         aria-label={`Détails — ${zone.name}`}
-        className={`pointer-events-auto absolute inset-x-0 bottom-0 z-[1001] mx-auto max-w-md rounded-t-3xl border-t border-border bg-card shadow-2xl transition-transform duration-300 ease-out ${
+        className={`pointer-events-auto absolute inset-x-0 bottom-0 z-[1200] mx-auto max-w-md rounded-t-3xl border-t border-border bg-card shadow-2xl transition-transform duration-300 ease-out ${
           open ? "translate-y-0" : "translate-y-full"
         }`}
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <div className="flex justify-center pt-3">
+        <div
+          className="flex justify-center pt-3 touch-none"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+        >
           <span className="h-1.5 w-10 rounded-full bg-muted-foreground/40" />
         </div>
 
