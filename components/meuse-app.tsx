@@ -160,7 +160,7 @@ export function MeuseApp() {
       m.on("click", async (e: LeafletMouseEvent) => {
         if (Date.now() - lastDrag < 300) return
         setQuerying(true)
-        const minLoad = new Promise((r) => setTimeout(r, 1000))
+        const minLoad = new Promise((r) => setTimeout(r, 500))
         const { lat, lng } = e.latlng
         const baseUrl =
           `https://geoservices.wallonie.be/arcgis/rest/services/EAU/LEGIS_PECHE/MapServer`
@@ -356,11 +356,12 @@ export function MeuseApp() {
 
       {/* loading veil */}
       {!ready && (
-        <div className="absolute inset-0 z-[500] flex flex-col items-center justify-center gap-4 bg-background">
+        <div className="absolute inset-0 z-[500] flex flex-col items-center justify-center gap-2 bg-background">
           <img
             src="/ma_peche.png"
             alt=""
             className="size-24 animate-spin rounded-2xl"
+            style={{ animationDuration: "1.2s" }}
           />
           <p className="text-sm font-medium text-foreground/60">Chargement…</p>
         </div>
@@ -565,11 +566,12 @@ export function MeuseApp() {
 
       {/* zone query loading spinner */}
       {querying && (
-        <div className="fixed inset-0 z-[2000] flex flex-col items-center justify-center gap-4 bg-black/30 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[2000] flex flex-col items-center justify-center gap-2 bg-black/30 backdrop-blur-sm">
           <img
             src="/ma_peche.png"
             alt=""
             className="size-24 animate-spin rounded-2xl"
+            style={{ animationDuration: "1.2s" }}
           />
           <p className="text-sm font-medium text-white/80">Chargement…</p>
         </div>

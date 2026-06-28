@@ -7,11 +7,12 @@ const MeuseApp = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-dvh flex-col items-center justify-center gap-4 bg-background">
+      <div className="flex h-dvh flex-col items-center justify-center gap-2 bg-background">
         <img
           src="/ma_peche.png"
           alt=""
           className="size-24 animate-spin rounded-2xl"
+          style={{ animationDuration: "1.2s" }}
         />
         <p className="text-sm font-medium text-foreground/60">Chargement…</p>
       </div>
