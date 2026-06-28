@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { Map as LeafletMap, Marker, LeafletMouseEvent } from "leaflet"
-import { Fish, BookOpen, ExternalLink, Ban, X, LocateFixed, Loader2, Plus, Minus, Sun, Moon } from "lucide-react"
+import { Fish, BookOpen, ExternalLink, Ban, X, LocateFixed, Loader2, Plus, Minus, Sun, Moon, ShieldCheck } from "lucide-react"
 import "leaflet/dist/leaflet.css"
 
 import { SearchBar, type SearchResult } from "@/components/search-bar"
@@ -533,7 +533,7 @@ export function MeuseApp() {
         {checkingLegal ? (
           <Loader2 className="size-5 animate-spin text-primary" />
         ) : (
-          <span className="size-5 text-lg leading-none">&#128737;</span>
+          <ShieldCheck className="size-5 text-primary" />
         )}
       </button>
 
