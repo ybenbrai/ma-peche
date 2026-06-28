@@ -51,7 +51,7 @@ export function ZoneSheet({
         role="dialog"
         aria-modal="true"
         aria-label={`Détails — ${zone.name}`}
-        className={`pointer-events-auto absolute inset-x-0 bottom-0 z-[1001] mx-auto max-w-md rounded-t-3xl border-t border-border bg-[#0f172a] shadow-2xl transition-transform duration-300 ease-out ${
+        className={`pointer-events-auto absolute inset-x-0 bottom-0 z-[1001] mx-auto max-w-md rounded-t-3xl border-t border-border bg-card shadow-2xl transition-transform duration-300 ease-out ${
           open ? "translate-y-0" : "translate-y-full"
         }`}
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
@@ -76,12 +76,12 @@ export function ZoneSheet({
               </p>
               <div className="mt-1 flex flex-wrap items-center gap-1.5">
                 {zone.nature && (
-                  <span className="rounded-md bg-[#1e293b] px-1.5 py-0.5 text-[10px] font-medium text-foreground/80">
+                  <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
                     {zone.nature}
                   </span>
                 )}
                 {zone.zoneEaux && zone.zoneEaux !== "/" && zone.zoneEaux !== "-" && (
-                  <span className="rounded-md bg-[#1e293b] px-1.5 py-0.5 text-[10px] font-medium text-foreground/80">
+                  <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
                     {zone.zoneEaux}
                   </span>
                 )}
@@ -180,7 +180,7 @@ export function ZoneSheet({
                   <button
                     type="button"
                     onClick={() => window.open(zone.rPeVif, "_blank", "noopener")}
-                    className="w-full rounded-xl bg-[#1e293b] px-3 py-2 text-left text-[11px] font-medium text-foreground/80 transition-colors hover:bg-[#334155]"
+                    className="w-full rounded-xl bg-muted px-3 py-2 text-left text-[11px] font-medium text-foreground/80 transition-colors hover:bg-accent"
                   >
                     📄 Conditions pêche au vif
                   </button>
@@ -196,7 +196,7 @@ export function ZoneSheet({
                 <button
                   type="button"
                   onClick={() => window.open(zone.r1fev1sjuin, "_blank", "noopener")}
-                  className="w-full rounded-xl bg-[#1e293b] px-3 py-2 text-left text-[11px] font-medium text-foreground/80 transition-colors hover:bg-[#334155]"
+                  className="w-full rounded-xl bg-muted px-3 py-2 text-left text-[11px] font-medium text-foreground/80 transition-colors hover:bg-accent"
                 >
                   📄 Fermeture du brochet (1 fév → 1er sam juin)
                 </button>
@@ -318,8 +318,7 @@ function SeasonSection({ zone }: { zone: FishingZone }) {
         {fishWithStatus.map((f) => (
           <div
             key={f.name}
-            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium"
-            style={{ backgroundColor: "#1e293b", color: "#e2e8f0" }}
+            className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-foreground"
           >
             <span
               className="size-1.5 shrink-0 rounded-full"

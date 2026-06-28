@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { Map as LeafletMap, Marker, LeafletMouseEvent } from "leaflet"
-import { Fish, BookOpen, ExternalLink, Ban, X, LocateFixed, Loader2, Plus, Minus } from "lucide-react"
+import { Fish, BookOpen, ExternalLink, Ban, X, LocateFixed, Loader2, Plus, Minus, Sun, Moon } from "lucide-react"
 import "leaflet/dist/leaflet.css"
 
 import { SearchBar, type SearchResult } from "@/components/search-bar"
@@ -51,6 +51,18 @@ export function MeuseApp() {
   const [legalResult, setLegalResult] = useState<LegalCheckResult | null>(null)
   const [showBait, setShowBait] = useState(false)
   const [showSpecies, setShowSpecies] = useState(false)
+  const [dark, setDark] = useState(true)
+
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"))
+  }, [])
+
+  const toggleTheme = useCallback(() => {
+    const next = !document.documentElement.classList.contains("dark")
+    document.documentElement.classList.toggle("dark", next)
+    localStorage.setItem("ma-peche-theme", next ? "dark" : "light")
+    setDark(next)
+  }, [])
 
   // ---- initialise the Leaflet map (client only) ----
   useEffect(() => {
@@ -419,14 +431,14 @@ export function MeuseApp() {
           onClick={() => setShowSpecies(false)}
         >
           <div
-            className="relative w-full max-w-xs rounded-2xl bg-[#1e293b] p-5 shadow-2xl"
+            className="relative w-full max-w-xs rounded-2xl bg-card p-5 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               onClick={() => setShowSpecies(false)}
               aria-label="Fermer"
-              className="absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors hover:bg-white/20"
+              className="absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-accent"
             >
               <X className="size-4" />
             </button>
@@ -439,7 +451,7 @@ export function MeuseApp() {
                   key={p.label}
                   type="button"
                   onClick={() => { handleOpenLink(p.url); setShowSpecies(false) }}
-                  className="flex w-full items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 text-left text-[13px] font-medium text-foreground/85 transition-colors hover:bg-white/10"
+                  className="flex w-full items-center gap-2 rounded-xl bg-muted px-3 py-2.5 text-left text-[13px] font-medium text-foreground/85 transition-colors hover:bg-accent"
                 >
                   <span className="grow">{p.label}</span>
                   <ExternalLink className="size-3.5 shrink-0 text-foreground/50" />
@@ -457,14 +469,14 @@ export function MeuseApp() {
           onClick={() => setShowBait(false)}
         >
           <div
-            className="relative max-w-sm rounded-2xl bg-[#1e293b] p-5 shadow-2xl"
+            className="relative max-w-sm rounded-2xl bg-card p-5 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               onClick={() => setShowBait(false)}
               aria-label="Fermer"
-              className="absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors hover:bg-white/20"
+              className="absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-accent"
             >
               <X className="size-4" />
             </button>
@@ -475,7 +487,7 @@ export function MeuseApp() {
         </div>
       )}
 
-      {/* zoom buttons — left side */}
+      {/* zoom buttons + theme toggle — left side */}
       <div
         className="absolute left-4 z-[600] flex flex-col overflow-hidden rounded-2xl border border-border bg-card/90 shadow-lg backdrop-blur-md"
         style={{ bottom: "calc(env(safe-area-inset-bottom) + 12rem)" }}
@@ -496,6 +508,15 @@ export function MeuseApp() {
           className="flex size-11 items-center justify-center text-foreground transition-colors hover:bg-accent active:bg-accent/70"
         >
           <Minus className="size-5" />
+        </button>
+        <span className="h-px bg-border" />
+        <button
+          type="button"
+          onClick={toggleTheme}
+          aria-label="Changer le thème"
+          className="flex size-11 items-center justify-center text-foreground transition-colors hover:bg-accent active:bg-accent/70"
+        >
+          {dark ? <Sun className="size-5" /> : <Moon className="size-5" />}
         </button>
       </div>
 

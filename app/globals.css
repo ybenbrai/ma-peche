@@ -36,8 +36,36 @@
   --radius-2xl: calc(var(--radius) * 1.8);
 }
 
-/* Forced dark theme for the Meuse fishing map */
-:root,
+/* ── Light theme (default) ── */
+:root {
+  color-scheme: light dark;
+  --background: oklch(0.98 0.005 240);
+  --foreground: oklch(0.17 0.018 240);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.17 0.018 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.17 0.018 240);
+  --primary: oklch(0.5 0.15 230);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.92 0.01 240);
+  --secondary-foreground: oklch(0.17 0.018 240);
+  --muted: oklch(0.94 0.01 240);
+  --muted-foreground: oklch(0.45 0.02 240);
+  --accent: oklch(0.9 0.02 240);
+  --accent-foreground: oklch(0.17 0.018 240);
+  --destructive: oklch(0.62 0.21 25);
+  --border: oklch(0 0 0 / 12%);
+  --input: oklch(0 0 0 / 8%);
+  --ring: oklch(0.5 0.15 230);
+  --radius: 1rem;
+
+  /* fishing zone status colors — same in both themes */
+  --zone-allowed: #4a90d9;
+  --zone-forbidden: #ff4d4d;
+  --zone-release: #ffbb33;
+}
+
+/* ── Dark theme ── */
 .dark {
   color-scheme: dark;
   --background: oklch(0.17 0.018 240);
@@ -58,12 +86,6 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 12%);
   --ring: oklch(0.74 0.13 195);
-  --radius: 1rem;
-
-  /* fishing zone status colors */
-  --zone-allowed: #4a90d9;
-  --zone-forbidden: #ff4d4d;
-  --zone-release: #ffbb33;
 }
 
 @layer base {
@@ -84,11 +106,15 @@
 
 /* ---- Leaflet dark overrides ---- */
 .leaflet-container {
-  background: oklch(0.17 0.018 240);
+  background: var(--background);
   font-family: inherit;
   outline: none;
 }
 .leaflet-tile-pane {
+  /* default: no filter in light mode */
+  filter: none;
+}
+.dark .leaflet-tile-pane {
   /* clean blue-gray dark look from light OSM tiles */
   filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9)
     saturate(0.45) brightness(0.78);
@@ -124,9 +150,9 @@
   width: 18px;
   height: 18px;
   border-radius: 9999px;
-  background: oklch(0.74 0.13 195);
-  border: 3px solid oklch(0.97 0.005 240);
-  box-shadow: 0 0 0 2px oklch(0.74 0.13 195 / 40%);
+  background: var(--primary);
+  border: 3px solid var(--background);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--primary) 40%, transparent);
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
@@ -154,6 +180,6 @@
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  background: oklch(0.74 0.13 195 / 45%);
+  background: color-mix(in oklch, var(--primary) 45%, transparent);
   animation: pulse-ring 2.4s ease-out infinite;
 }
