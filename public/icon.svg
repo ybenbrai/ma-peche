@@ -1,0 +1,17 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="180" height="180" rx="37" fill="#0f172a"/>
+  <g transform="translate(90,90)">
+    <!-- fish body -->
+    <ellipse cx="-8" cy="0" rx="48" ry="20" fill="#4ade80"/>
+    <!-- tail -->
+    <path d="M-56 0 L-80 -24 L-80 24 Z" fill="#4ade80"/>
+    <!-- eye -->
+    <circle cx="22" cy="-5" r="5" fill="#0f172a"/>
+    <!-- dorsal fin -->
+    <path d="M-20 -20 Q-8 -44 12 -22" fill="#22c55e"/>
+    <!-- ventral fin -->
+    <path d="M-10 18 Q0 34 10 18" fill="#22c55e"/>
+    <!-- mouth -->
+    <path d="M42 -2 Q48 0 42 2" stroke="#166534" stroke-width="2" fill="none"/>
+  </g>
+</svg>
