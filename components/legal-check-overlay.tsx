@@ -31,7 +31,7 @@ export function LegalCheckOverlay({
     return () => document.removeEventListener("keydown", onKey)
   }, [onClose])
 
-  if (checking) {
+  if (checking && !result) {
     return (
       <>
         <div

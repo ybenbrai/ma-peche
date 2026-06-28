@@ -292,6 +292,7 @@ export function MeuseApp() {
 
           if (features.length === 0) {
             setLegalResult({ status: "no-water" })
+            setCheckingLegal(false)
             return
           }
 
