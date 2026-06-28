@@ -56,11 +56,7 @@ export function ZoneSheet({
         }`}
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <div className="flex justify-center pt-3">
-          <span className="h-1.5 w-10 rounded-full bg-muted-foreground/40" />
-        </div>
-
-        <div className="space-y-2 px-5 pb-5 pt-2">
+        <div className="space-y-2 px-5 pb-5 pt-4">
 
           {/* ---- HEADER ---- */}
           <div className="flex items-start justify-between gap-3">

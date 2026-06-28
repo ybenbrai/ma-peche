@@ -52,6 +52,7 @@ export function MeuseApp() {
   const [showBait, setShowBait] = useState(false)
   const [showSpecies, setShowSpecies] = useState(false)
   const [dark, setDark] = useState(true)
+  const [querying, setQuerying] = useState(false)
 
   useEffect(() => {
     setDark(document.documentElement.classList.contains("dark"))
@@ -79,8 +80,14 @@ export function MeuseApp() {
       map = L.map(containerRef.current, {
         center: [50.49, 5.05],
         zoom: 12,
+        minZoom: 8,
         zoomControl: false,
         attributionControl: false,
+        maxBounds: [
+          [49.4, 2.5],
+          [51.6, 6.5],
+        ],
+        maxBoundsViscosity: 1,
       })
       mapRef.current = map
 
@@ -152,19 +159,24 @@ export function MeuseApp() {
       m.on("dragstart", () => { lastDrag = Date.now() })
       m.on("click", async (e: LeafletMouseEvent) => {
         if (Date.now() - lastDrag < 300) return
+        setQuerying(true)
+        const minLoad = new Promise((r) => setTimeout(r, 1000))
         const { lat, lng } = e.latlng
         const baseUrl =
           `https://geoservices.wallonie.be/arcgis/rest/services/EAU/LEGIS_PECHE/MapServer`
         const geoQ = `geometry=${lng},${lat}&geometryType=esriGeometryPoint&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=false`
         try {
-          const [dayRes, nightRes] = await Promise.all([
-            fetch(`${baseUrl}/0/query?f=json&${geoQ}`),
-            fetch(`${baseUrl}/1/query?f=json&${geoQ}`),
+          const [[dayRes, nightRes]] = await Promise.all([
+            Promise.all([
+              fetch(`${baseUrl}/0/query?f=json&${geoQ}`),
+              fetch(`${baseUrl}/1/query?f=json&${geoQ}`),
+            ]),
+            minLoad,
           ])
           const dayData = await dayRes.json()
           const nightData = await nightRes.json()
           const dayFeatures = dayData.features || []
-          if (dayFeatures.length === 0) return
+          if (dayFeatures.length === 0) { setQuerying(false); return }
           const zone = parseWmsFeature(
             (dayFeatures[0].attributes || {}) as Record<string, unknown>,
           )
@@ -179,6 +191,7 @@ export function MeuseApp() {
         } catch {
           // silent
         }
+        setQuerying(false)
       })
 
       // fit to Meuse corridor
@@ -343,30 +356,28 @@ export function MeuseApp() {
 
       {/* loading veil */}
       {!ready && (
-        <div className="absolute inset-0 z-[500] grid place-items-center bg-background">
-          <div className="flex flex-col items-center gap-3 text-muted-foreground">
-            <Loader2 className="size-6 animate-spin text-primary" />
-            <p className="text-sm">Chargement de la carte…</p>
-          </div>
+        <div className="absolute inset-0 z-[500] flex flex-col items-center justify-center gap-4 bg-background">
+          <img
+            src="/ma_peche.png"
+            alt=""
+            className="size-24 animate-spin rounded-2xl"
+          />
+          <p className="text-sm font-medium text-foreground/60">Chargement…</p>
         </div>
       )}
 
-      {/* top bar: title + search */}
+      {/* top bar: search */}
       <header
-        className="pointer-events-none absolute inset-x-0 top-0 z-[600] px-4 pt-4"
-        style={{ paddingTop: "calc(env(safe-area-inset-top) + 1rem)" }}
+        className="pointer-events-none absolute inset-x-0 top-0 z-[600] px-4"
+        style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.5rem)" }}
       >
-        <div className="mx-auto flex max-w-md flex-col gap-3">
-          <div className="pointer-events-none flex items-center gap-2 px-1">
-            <span
-              className="size-2.5 rounded-full bg-primary"
-              aria-hidden
-            />
-            <h1 className="text-sm font-semibold tracking-tight text-foreground drop-shadow">
-              Ma Pêche
-            </h1>
+        <div className="mx-auto flex max-w-md items-center gap-2">
+          <a href="/" className="pointer-events-auto shrink-0">
+            <img src="/ma_peche.png" alt="Ma Pêche" className="h-[55px] w-auto rounded-lg" />
+          </a>
+          <div className="pointer-events-auto flex-1 min-w-0">
+            <SearchBar onSelect={handleSearch} />
           </div>
-          <SearchBar onSelect={handleSearch} />
         </div>
       </header>
 
@@ -551,6 +562,18 @@ export function MeuseApp() {
           <Legend />
         </div>
       </div>
+
+      {/* zone query loading spinner */}
+      {querying && (
+        <div className="fixed inset-0 z-[2000] flex flex-col items-center justify-center gap-4 bg-black/30 backdrop-blur-sm">
+          <img
+            src="/ma_peche.png"
+            alt=""
+            className="size-24 animate-spin rounded-2xl"
+          />
+          <p className="text-sm font-medium text-white/80">Chargement…</p>
+        </div>
+      )}
 
       {/* legal check overlay */}
       <LegalCheckOverlay
