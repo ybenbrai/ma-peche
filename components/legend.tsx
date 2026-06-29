@@ -27,10 +27,10 @@ export function Legend() {
           </div>
         ))}
       </div>
-      <p className="mt-0.5 text-center text-[7px] text-muted-foreground/50">
+      <p className="mt-0.5 text-center text-[7px] text-black/40 dark:text-white/50">
         Données indicatives — vérifiez auprès de votre fédération
       </p>
-      <p className="text-center text-[7px] text-muted-foreground/40">
+      <p className="text-center text-[7px] text-black/30 dark:text-white/40">
         © Wallonie · © OpenStreetMap
       </p>
     </div>

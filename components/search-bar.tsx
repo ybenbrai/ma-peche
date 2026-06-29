@@ -113,7 +113,7 @@ export function SearchBar({
       </div>
 
       {open && results.length > 0 && (
-        <ul className="absolute left-0 right-0 top-[calc(100%+0.5rem)] overflow-hidden rounded-2xl border border-border bg-card/95 shadow-xl backdrop-blur-md">
+        <ul className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-[100] overflow-hidden rounded-2xl border border-border bg-card/95 shadow-xl backdrop-blur-md">
           {results.map((r, i) => (
             <li key={`${r.lat}-${r.lng}-${i}`}>
               <button

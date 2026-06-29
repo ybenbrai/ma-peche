@@ -14,6 +14,7 @@ import {
   LegalCheckOverlay,
   type LegalCheckResult,
 } from "@/components/legal-check-overlay"
+import { FishingHours } from "@/components/fishing-hours"
 
 const WMS_URL = "https://geoservices.wallonie.be/arcgis/services/EAU/LEGIS_PECHE/MapServer/WMSServer"
 
@@ -372,13 +373,9 @@ export function MeuseApp() {
         className="pointer-events-none absolute inset-x-0 top-0 z-[600] px-4"
         style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.5rem)" }}
       >
-        <div className="mx-auto flex max-w-md items-center gap-2">
-          <a href="/" className="pointer-events-auto shrink-0">
-            <img src="/ma_peche.png" alt="Ma Pêche" className="h-[55px] w-auto rounded-lg" />
-          </a>
-          <div className="pointer-events-auto flex-1 min-w-0">
-            <SearchBar onSelect={handleSearch} />
-          </div>
+        <div className="pointer-events-auto mx-auto flex max-w-md flex-col gap-2">
+          <SearchBar onSelect={handleSearch} />
+          <FishingHours />
         </div>
       </header>
 
