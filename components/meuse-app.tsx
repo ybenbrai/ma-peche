@@ -18,6 +18,24 @@ import { FishingHours } from "@/components/fishing-hours"
 
 const WMS_URL = "https://geoservices.wallonie.be/arcgis/services/EAU/LEGIS_PECHE/MapServer/WMSServer"
 
+const OVERPASS_URL = "https://overpass-api.de/api/interpreter"
+
+async function checkOsmWater(lat: number, lng: number): Promise<string | null> {
+  const query = `[out:json];(way(around:30,${lat},${lng})[waterway];way(around:30,${lat},${lng})[natural~"water|wetland|bay"];rel(around:30,${lat},${lng})[waterway];rel(around:30,${lat},${lng})[natural~"water|wetland|bay"];);out center 1;`
+  try {
+    const res = await fetch(`${OVERPASS_URL}?data=${encodeURIComponent(query)}`, {
+      signal: AbortSignal.timeout(5000),
+    })
+    const data = await res.json()
+    const elements = data.elements || []
+    if (elements.length === 0) return null
+    const tags = elements[0].tags || {}
+    return tags.name || tags.waterway || tags.natural || "Cours d'eau"
+  } catch {
+    return null
+  }
+}
+
 const SPECIES_PDFS = [
   {
     label: "Eaux calmes et mixtes",
@@ -177,7 +195,41 @@ export function MeuseApp() {
           const dayData = await dayRes.json()
           const nightData = await nightRes.json()
           const dayFeatures = dayData.features || []
-          if (dayFeatures.length === 0) { setQuerying(false); return }
+          if (dayFeatures.length === 0) {
+            const waterName = await checkOsmWater(lat, lng)
+            if (waterName) {
+              setSelectedZone({
+                id: "osm",
+                name: waterName,
+                status: "allowed",
+                reason: "Régime général — zone non spécifiquement réglementée",
+                nature: "",
+                fedPech: "",
+                pechJour: "Autorisée",
+                descInt: "",
+                prelevement: "Autorisé",
+                litPrincipal: "",
+                permisDePeche: "Permis A minimum",
+                espPeche: "",
+                appatsInterdit: "",
+                clefPoissons: "",
+                f1fev3smars: "",
+                f3smas1sjuin: "",
+                f1sjuin30sep: "",
+                f1oct31janv: "",
+                droitPech: "",
+                infoCompl: "Aucune réglementation spécifique encodée par le SPW pour ce cours d'eau.",
+                remZeaux: "",
+                rPeVif: "",
+                r1fev1sjuin: "",
+              })
+              setSheetOpen(true)
+              setShowBait(false)
+              setShowSpecies(false)
+            }
+            setQuerying(false)
+            return
+          }
           const zone = parseWmsFeature(
             (dayFeatures[0].attributes || {}) as Record<string, unknown>,
           )
